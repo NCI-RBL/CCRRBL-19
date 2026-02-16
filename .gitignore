@@ -1,0 +1,15 @@
+hg38-tRNAs.tar.gz
+gencode.v49.primary_assembly.annotation.gtf.gz
+Tailer/.DS_Store
+Tailer/gencode_genes/17_tail.csv
+Tailer/gencode_genes/17multi_tail.csv
+Tailer/gencode_genes/99_tail.csv
+Tailer/gencode_genes/99multi_tail.csv
+Tailer/gencode_genes/c_multi_tail.csv
+Tailer/gencode_genes/ctrl_tail.csv
+Tailer/tRNAs/17_tail.csv
+Tailer/tRNAs/17multi_tail.csv
+Tailer/tRNAs/99_tail.csv
+Tailer/tRNAs/99multi_tail.csv
+Tailer/tRNAs/c_multi_tail.csv
+Tailer/tRNAs/ctrl_tail.csv
