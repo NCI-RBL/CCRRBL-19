@@ -1,0 +1,76 @@
+---
+title: "RBL-19"
+author: "Wilfried Guiblet"
+output:
+  github_document:
+    html_preview: true
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+setwd("/Users/guibletwm/Lab_Work/CCRRBL-15")
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+library(rstatix)
+```
+
+# Tailer Analysis
+
+```{bash, eval=FALSE}
+module load python
+#pip install jla-tailer
+Tailer -a references/gencode.v49.annotation.gtf rawfiles/17.bam
+Tailer -a references/gencode.v49.annotation.gtf rawfiles/17multi.bam
+Tailer -a references/gencode.v49.annotation.gtf rawfiles/99.bam
+Tailer -a references/gencode.v49.annotation.gtf rawfiles/99multi.bam
+Tailer -a references/gencode.v49.annotation.gtf rawfiles/ctrl.bam
+Tailer -a references/gencode.v49.annotation.gtf rawfiles/c_multi.bam
+
+mv rawfiles/*_tail.csv Tailer/gencode_genes/
+```
+
+
+export NXF_SINGULARITY_CACHEDIR=$PWD/.singularity
+export SINGULARITY_CACHEDIR=$PWD/.singularity
+
+singularity pull bed2gtf.sif docker://wilfriedguiblet/bed2gtf:v0.1
+singularity shell -B $(pwd)/:/data2/ bed2gtf.sif
+
+bed2gtf -b hg38-tRNAs.bed -o hg38-tRNAs.gtf --no-gene
+
+# Appends gene_name "<gene_id_value>" at the end of the line:
+sed -E 's/(gene_id "([^"]+)";)/\1 gene_name "\2"/' hg38-tRNAs.gtf > hg38-tRNAs.withnames.gtf
+
+
+# switch to exon
+vim /home/guibletwm/.local/lib/python3.10/site-packages/Tailer/TailerFunctions.py
+
+
+```{bash, eval=FALSE}
+module load python
+#pip install jla-tailer
+Tailer -a references/hg38-tRNAs.withnames.gtf rawfiles/17.bam
+Tailer -a references/hg38-tRNAs.withnames.gtf rawfiles/17multi.bam
+Tailer -a references/hg38-tRNAs.withnames.gtf rawfiles/99.bam
+Tailer -a references/hg38-tRNAs.withnames.gtf rawfiles/99multi.bam
+Tailer -a references/hg38-tRNAs.withnames.gtf rawfiles/ctrl.bam
+Tailer -a references/hg38-tRNAs.withnames.gtf rawfiles/c_multi.bam
+
+
+#c_multi is too big
+
+samtools view -s 0.25 -b rawfiles/c_multi.bam > rawfiles/c_multi.subset.bam
+samtools index rawfiles/c_multi.subset.bam
+Tailer -a references/hg38-tRNAs.withnames.gtf rawfiles/c_multi.subset.bam
+mv rawfiles/c_multi.subset_tail.csv Tailer/tRNAs/
+
+
+```
+
+
+
+
+
+
